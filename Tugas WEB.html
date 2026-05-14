@@ -302,6 +302,57 @@
         <span id="toast-message" class="text-dark font-medium text-sm">Berhasil!</span>
     </div>
 
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black bg-opacity-60 transition-all duration-300 opacity-0 py-6">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col" id="payment-modal-content">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h2 class="text-xl font-bold text-dark"><i class="fa-solid fa-wallet text-primary mr-2"></i>Pilih Pembayaran</h2>
+                <button onclick="toggleModal('payment-modal', 'payment-modal-content', false)" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <div class="p-5">
+                <div class="bg-blue-50 text-blue-800 p-4 rounded-xl mb-6 text-center">
+                    <p class="text-sm text-blue-600 mb-1">Total Tagihan</p>
+                    <p class="text-3xl font-bold" id="payment-total">Rp 0</p>
+                </div>
+                <form id="payment-form" onsubmit="processPayment(event)">
+                    <div class="space-y-3 mb-6">
+                        <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                            <input type="radio" name="payment_method" value="gopay" class="w-5 h-5 text-primary focus:ring-primary" required>
+                            <span class="ml-3 font-bold text-gray-700">GoPay</span>
+                        </label>
+                        <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                            <input type="radio" name="payment_method" value="dana" class="w-5 h-5 text-primary focus:ring-primary" required>
+                            <span class="ml-3 font-bold text-gray-700">DANA</span>
+                        </label>
+                        <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                            <input type="radio" name="payment_method" value="qris" class="w-5 h-5 text-primary focus:ring-primary" required>
+                            <span class="ml-3 font-bold text-gray-700">QRIS (Semua E-Wallet)</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full bg-primary hover:bg-red-600 text-white font-bold py-3 rounded-xl transition shadow-md">Bayar Sekarang</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- QRIS Modal -->
+    <div id="qris-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-black bg-opacity-70 transition-all duration-300 opacity-0 py-6">
+        <div class="bg-white rounded-2xl w-full max-w-sm mx-4 overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col text-center" id="qris-modal-content">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h2 class="text-xl font-bold text-dark">Scan QRIS</h2>
+                <button onclick="toggleModal('qris-modal', 'qris-modal-content', false)" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <div class="p-6 flex flex-col items-center">
+                <p class="text-sm text-gray-600 mb-4">Silakan scan kode QR di bawah ini menggunakan aplikasi M-Banking atau E-Wallet Anda.</p>
+                <div class="bg-gray-100 p-4 rounded-xl mb-4">
+                    <img src="https://placehold.co/200x200/png?text=QR+CODE+QRIS" alt="QRIS" class="w-48 h-48 mx-auto mix-blend-multiply">
+                </div>
+                <p class="text-2xl font-bold text-primary mb-6" id="qris-total">Rp 0</p>
+                <button onclick="finalizeOrder()" class="w-full bg-dark hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition shadow-md">Saya Sudah Bayar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Admin Modal -->
     <div id="admin-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black bg-opacity-60 transition-all duration-300 opacity-0 py-6">
         <div class="bg-white rounded-2xl w-full max-w-5xl mx-4 overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col h-full max-h-[90vh]" id="admin-modal-content">
@@ -373,15 +424,16 @@
                     <!-- Tabel Daftar Menu -->
                     <div class="bg-white rounded-xl shadow-sm border overflow-x-auto">
                         <table class="w-full text-left border-collapse">
-                            <thead><tr class="bg-gray-100 text-sm"><th class="p-3">Gambar</th><th class="p-3">Info Menu</th><th class="p-3">Harga</th><th class="p-3 text-center">Aksi</th></tr></thead>
-                            <tbody id="admin-menus-list" class="divide-y text-sm"></tbody>
-                        </table>
+                            <table class="w-full text-left border-collapse">
+                                <thead><tr class="bg-gray-100 text-sm"><th class="p-3">Gambar</th><th class="p-3">Info Menu</th><th class="p-3">Harga</th><th class="p-3 text-center">Aksi</th></tr></thead>
+                                <tbody id="admin-menus-list" class="divide-y text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
 
     <script>
         // --- 1. INITIALIZATION & DATA BASE ---
